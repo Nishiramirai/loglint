@@ -59,7 +59,7 @@ func run(pass *analysis.Pass) (any, error) {
 					}
 
 					if !isLowerStart(msg) {
-						pass.Reportf(lit.Pos(), "log message must start with a lowercase")
+						pass.Reportf(lit.Pos(), "log message must start with a lowercase letter")
 					}
 
 					if !isEnglishOnly(msg) {
@@ -67,7 +67,7 @@ func run(pass *analysis.Pass) (any, error) {
 					}
 
 					if hasSpecialCharsOrEmojis(msg) {
-						pass.Reportf(lit.Pos(), "log message must not contain special characters")
+						pass.Reportf(lit.Pos(), "log message must not contain special characters or emojis")
 					}
 
 					if hasSensitiveData(msg) {
@@ -115,7 +115,7 @@ func hasSpecialCharsOrEmojis(s string) bool {
 	return false
 }
 
-var sensitiveWords = []string{"password", "api_key", "token", "secret"}
+var sensitiveWords = []string{"password:", "password=", "api_key:", "api_key=", "token:", "token="}
 
 func hasSensitiveData(s string) bool {
 	lowerStr := strings.ToLower(s)

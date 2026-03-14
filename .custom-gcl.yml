@@ -1,0 +1,5 @@
+version: v1.56.2
+plugins:
+  - module: 'github.com/Nishiramirai/loglint'
+    import: 'github.com/Nishiramirai/loglint/plugin'
+    version: main
