@@ -1,66 +1,75 @@
 # LogLint
 
-Линтер для проверки лог-записей (slog, zap) в проектах на Go. Написан как плагин для `golangci-lint`.
+Линтер для проверки лог-записей (`log/slog`, `go.uber.org/zap`) в проектах на Go. 
+Реализован как кастомный анализатор с поддержкой **Module Plugin System** для интеграции в `golangci-lint`.
 
-## Правила
-Линтер проверяет вызовы `log/slog` и `go.uber.org/zap` на соответствие следующим правилам:
-1. Сообщение должно начинаться со строчной буквы.
-2. Сообщение должно быть только на английском языке.
-3. Сообщение не должно содержать спецсимволов или эмодзи (разрешены только латиница, цифры и пробелы).
-4. Сообщение не должно содержать потенциально чувствительные данные (ключевые слова `password:`, `api_key=`, `token:` и т.д.).
+## Поддерживаемые правила
+Линтер парсит AST-дерево проекта и проверяет строковые аргументы логгеров на соответствие следующим правилам:
+1. **Регистр:** Лог-сообщения должны начинаться со строчной (маленькой) буквы.
+2. **Язык:** Лог-сообщения должны быть только на английском языке.
+3. **Символы:** Лог-сообщения не должны содержать спецсимволы или эмодзи (разрешены только латинские буквы, цифры и пробелы).
+4. **Секреты:** Лог-сообщения не должны содержать потенциально чувствительные данные (поиск по паттернам: `password:`, `api_key=`, `token:` и др.).
 
-## Сборка и установка (как кастомный плагин)
+## Быстрый старт (Makefile)
 
-Для работы с `golangci-lint` используется Module Plugin System. Вам понадобится утилита `custom-gcl` для сборки кастомного бинарника линтера с нашим плагином.
+В проекте настроен `Makefile` для автоматической установки зависимостей, сборки плагина и запуска тестов.
 
-1. Установите `custom-gcl`:
-``` bash
-go install github.com/golangci/golangci-lint/cmd/custom-gcl@latest
+**1. Запуск всех тестов (Unit + AST e2e):**
+```bash
+make test
 ```
 
-2. Создайте файл `.custom-gcl.yml` в корне проекта, где хотите использовать линтер:
+**2. Сборка плагина и запуск линтера:**
+```bash
+make lint
 ```
-    version: v1.56.2
-    plugins:
-      - module: 'github.com/твое_имя/loglint'
-        import: 'github.com/твое_имя/loglint/plugin'
-        version: main
-```
+*(Эта команда скачает `golangci-lint`, соберет кастомный бинарник `custom-gcl` с нашим плагином внутри и проверит текущую директорию).*
 
-3. Соберите кастомный бинарник:
-``` bash
-custom-gcl build .custom-gcl.yml
+**3. Запуск как Standalone CLI (Без golangci-lint):**
+```bash
+make run-standalone
 ```
 
-В текущей директории появится файл `custom-gcl` (или `custom-gcl.exe`).
+## Как интегрировать в свой проект
 
-## Использование и конфигурация
+Так как `golangci-lint` использует Module Plugin System, плагин компилируется вместе с самим линтером.
 
-Создайте файл `.golangci.yml` со следующим содержимым:
+**Шаг 1.** Создайте в корне вашего проекта конфигурационный файл `.custom-gcl.yml`:
+```yaml
+version: v1.56.2 # версия базового golangci-lint
+plugins:
+  - module: 'github.com/Nishiramirai/loglint'
+    import: 'github.com/Nishiramirai/loglint/plugin'
+    version: main
+```
 
-    linters-settings:
-      custom:
-        loglint:
-          type: module
-          description: Linter for log messages
+**Шаг 2.** Соберите кастомный бинарник линтера:
+```bash
+golangci-lint custom
+```
+*(В директории появится исполняемый файл `custom-gcl`)*
 
-    linters:
-      disable-all: true
-      enable:
-        - custom
+**Шаг 3.** Настройте запуск плагина в `.golangci.yml`:
+```yaml
+linters-settings:
+  custom:
+    loglint:
+      type: module
+      description: Linter for log messages rules
 
-Запуск линтера:
-``` bash
+linters:
+  disable-all: true
+  enable:
+    - custom
+```
+
+**Шаг 4.** Запустите проверку:
+```bash
 ./custom-gcl run --config .golangci.yml ./...
 ```
 
-## Запуск без golangci-lint (Standalone)
-Вы можете использовать линтер как самостоятельное CLI-приложение без сборки кастомного golangci-lint:
-``` bash
-go build -o loglint cmd/loglint/main.go ./loglint ./...
-```
-
-## Тестирование
-В проекте реализованы unit-тесты для правил валидации и end-to-end тесты с использованием AST (analysistest).
-
-    go test ./...
+## Структура проекта
+* `analyzer/` — Ядро линтера (поиск узлов AST, логика правил).
+* `analyzer/testdata/` — Инфраструктура для `analysistest` (E2E тесты).
+* `plugin/` — Точка входа для сборки `golangci-lint` плагина.
+* `cmd/loglint/` — Точка входа для сборки Standalone CLI-версии.

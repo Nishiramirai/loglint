@@ -1,4 +1,4 @@
-.PHONY: test build run-standalone install-gcl build-plugin lint clean
+.PHONY: test build run-standalone install-golangci build-plugin lint clean
 
 test:
 	go test -v ./...
@@ -9,11 +9,11 @@ build:
 run-standalone: build
 	./bin/loglint ./...
 
-install-gcl:
-	go install github.com/golangci/golangci-lint/cmd/custom-gcl@latest
+install-golangci:
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
-build-plugin: install-gcl
-	custom-gcl build .custom-gcl.yml
+build-plugin: install-golangci
+	golangci-lint custom
 
 lint: build-plugin
 	./custom-gcl run --config .golangci.yml ./...

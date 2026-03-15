@@ -2,9 +2,8 @@ linters-settings:
   custom:
     loglint:
       type: module
-      description: Linter for checking log messages rules
+      description: Linter for log messages rules
       original-url: github.com/Nishiramirai/loglint
-      settings: {}
 
 linters:
   disable-all: true
