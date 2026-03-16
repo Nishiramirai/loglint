@@ -1,8 +1,8 @@
 package plugin
 
 import (
-	"golang.org/x/tools/go/analysis"
 	"github.com/Nishiramirai/loglint/analyzer"
+	"golang.org/x/tools/go/analysis"
 )
 
 type analyzerPlugin struct{}
