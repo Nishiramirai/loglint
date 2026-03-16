@@ -2,7 +2,10 @@ module github.com/Nishiramirai/loglint
 
 go 1.26.1
 
-require golang.org/x/tools v0.43.0
+require (
+	github.com/golangci/plugin-module-register v0.1.1
+	golang.org/x/tools v0.43.0
+)
 
 require (
 	golang.org/x/mod v0.34.0 // indirect

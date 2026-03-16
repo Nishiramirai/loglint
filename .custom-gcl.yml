@@ -1,5 +1,6 @@
-version: v1.64.8
+version: v1.64.0
+name: custom-gcl
 plugins:
   - module: 'github.com/Nishiramirai/loglint'
-    path: .
-    import: 'github.com/Nishiramirai/loglint/analyzer'
+    path: /Users/kirin/projects/go/loglint
+    import: 'github.com/Nishiramirai/loglint/plugin'

@@ -12,7 +12,7 @@ import (
 
 var Analyzer = &analysis.Analyzer{
 	Name: "loglint",
-	Doc:  "log linter",
+	Doc:  "custom log linter",
 	Run:  run,
 }
 
@@ -26,6 +26,10 @@ func run(pass *analysis.Pass) (any, error) {
 
 			sel, ok := callExpr.Fun.(*ast.SelectorExpr)
 			if !ok {
+				return true
+			}
+
+			if pass.TypesInfo == nil || pass.TypesInfo.Uses == nil {
 				return true
 			}
 
@@ -133,13 +137,3 @@ func hasSensitiveData(s string) bool {
 
 	return false
 }
-
-type analyzerPlugin struct{}
-
-func (*analyzerPlugin) GetAnalyzers() []*analysis.Analyzer {
-	return []*analysis.Analyzer{
-		Analyzer,
-	}
-}
-
-var AnalyzerPlugin analyzerPlugin

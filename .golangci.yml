@@ -1,11 +1,13 @@
+version: "2"  # Оставляем, это важно для custom-бинарника
+
 linters:
   disable-all: true
   enable:
-    - loglint
+    - loglint  # Это имя должно совпадать с полем Name в твоем analysis.Analyzer
 
 linters-settings:
   custom:
     loglint:
-      type: module
+      type: "module"
       description: "My custom linter"
-      original-url: github.com/Nishiramirai/loglint
+      # УДАЛИ отсюда original-url и settings на время теста

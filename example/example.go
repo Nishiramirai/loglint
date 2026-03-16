@@ -1,8 +1,8 @@
-package a
+package example
 
 import "log/slog"
 
-func testLogger() {
+func example() {
 	password := "12345"
 	apiKey := "secret-key"
 	token := "jwt-token"

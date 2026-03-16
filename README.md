@@ -36,11 +36,12 @@ make run-standalone
 
 **Шаг 1.** Создайте в корне вашего проекта конфигурационный файл `.custom-gcl.yml`:
 ```yaml
-version: v1.56.2 # версия базового golangci-lint
+version: v1.64.0 # версия базового golangci-lint (должна совпадать с установленной)
 plugins:
   - module: 'github.com/Nishiramirai/loglint'
     import: 'github.com/Nishiramirai/loglint/plugin'
-    version: main
+    # Если хотите использовать локальную копию — укажите path вместо version:
+    # path: /absolute/path/to/loglint
 ```
 
 **Шаг 2.** Соберите кастомный бинарник линтера:
@@ -51,16 +52,18 @@ golangci-lint custom
 
 **Шаг 3.** Настройте запуск плагина в `.golangci.yml`:
 ```yaml
+version: "2"
+
 linters-settings:
   custom:
     loglint:
-      type: module
-      description: Linter for log messages rules
+      type: "module"
+      description: "Linter for log messages rules"
 
 linters:
   disable-all: true
   enable:
-    - custom
+    - loglint
 ```
 
 **Шаг 4.** Запустите проверку:
@@ -73,3 +76,4 @@ linters:
 * `analyzer/testdata/` — Инфраструктура для `analysistest` (E2E тесты).
 * `plugin/` — Точка входа для сборки `golangci-lint` плагина.
 * `cmd/loglint/` — Точка входа для сборки Standalone CLI-версии.
+* `example/` — Пример кода, на котором можно руками погонять линтер.
