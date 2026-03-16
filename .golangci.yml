@@ -1,10 +1,11 @@
-linters-settings:
-  custom:
-    loglint:
-      type: module
-      description: Custom loglint plugin
-
 linters:
   disable-all: true
   enable:
     - loglint
+
+linters-settings:
+  custom:
+    loglint:
+      type: module
+      description: "My custom linter"
+      original-url: github.com/Nishiramirai/loglint

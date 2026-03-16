@@ -2,4 +2,4 @@ version: v1.64.8
 plugins:
   - module: 'github.com/Nishiramirai/loglint'
     path: .
-    import: 'github.com/Nishiramirai/loglint'
+    import: 'github.com/Nishiramirai/loglint/analyzer'
