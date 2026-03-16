@@ -1,5 +1,5 @@
 version: v1.64.8
 plugins:
   - module: 'github.com/Nishiramirai/loglint'
-    import: 'github.com/Nishiramirai/loglint/plugin'
-    version: main
+    path: .
+    import: 'github.com/Nishiramirai/loglint'

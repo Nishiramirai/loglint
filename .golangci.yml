@@ -2,8 +2,7 @@ linters-settings:
   custom:
     loglint:
       type: module
-      description: Linter for log messages rules
-      original-url: github.com/Nishiramirai/loglint
+      description: Custom loglint plugin
 
 linters:
   disable-all: true
